@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/14 16:49:13 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/14 17:33:37 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,11 @@ void		readline(t_list **lst, int *pos, char	*str)
 			local = 0;
 		}
 	}
+	if (++local == (*lst)->content_size)
+	{
+		*lst = (*lst)->next;
+		local = 0;
+	}
 	*str = 0;
 	*pos = local;
 }
@@ -158,6 +163,7 @@ int		main()
 	{
 		str = (char *)malloc(sizeof(char) * (len(locallst, localpos) + 1));
 		readline(&locallst, &localpos, str);
+		printf("%p, %d\n",locallst,localpos);
 		printf("<%s>\n", str);
 	}
 }
