@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/14 12:13:22 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/14 16:49:13 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ void ft_lstpushback(t_list **start, t_list *new)
 	}
 }
 
-void	printline(t_list *lst, int pos)
+void	printline(t_list *lst, int posstart)
 {
 	int		local = 0;
-	int		posstart = pos;
+	int		pos = posstart;
 	char	*localcontent;
 	while (pos--)
 	{
@@ -62,24 +62,77 @@ void	printline(t_list *lst, int pos)
 	}
 	localcontent = (char *)lst->content + local;
 	
-	while (lst)
+	while (*localcontent != '\n')
 	{
-		while (*localcontent != '\n')
+		write(1,localcontent++,1);
+		posstart++;
+		local++;
+		if (local == lst->content_size)
 		{
-			write(1,localcontent++,1);
-			posstart++;
-			local++;
-			if (local == lst->content_size)
-			{
-				write(1, "|", 1);
-				lst = lst->next;
-				localcontent = (char *)lst->content;
-				local = 0;
-			}
+			write(1, "|", 1);
+			lst = lst->next;
+			localcontent = (char *)lst->content;
+			local = 0;
 		}
-		printf("\npos = %d , newpos = %d\n", local, posstart+1);
-		localcontent++;
 	}
+	printf("\npos = %d , newpos = %d\n", local, posstart+1);
+}
+
+int		len(t_list *lst, int posstart)
+{
+	int		local = 0;
+	int		pos = posstart;
+	char	*localcontent;
+	int ret = 0;
+
+	while (pos--)
+	{
+		if (local++ > lst->content_size)
+		{
+			lst = lst->next;
+			if (!lst)
+				return (-1);
+			local = 0;
+		}
+	}
+	localcontent = (char *)lst->content + local;
+	
+	while (*localcontent != '\n')
+	{
+		ret++;
+		localcontent++;
+		if (++local == lst->content_size)
+		{
+			lst = lst->next;
+			localcontent = (char *)lst->content;
+			local = 0;
+		}
+	}
+	return (ret);
+}
+
+
+void		readline(t_list **lst, int *pos, char	*str)
+{
+	int		local = *pos;
+	char	*localcontent;
+	char	*ret = str;
+
+
+	localcontent = (char *)(*lst)->content + local;
+	
+	while (*localcontent != '\n')
+	{
+		*str++ = *localcontent++;
+		if (++local == (*lst)->content_size)
+		{
+			*lst = (*lst)->next;
+			localcontent = (char *)(*lst)->content;
+			local = 0;
+		}
+	}
+	*str = 0;
+	*pos = local;
 }
 
 
@@ -90,21 +143,21 @@ int		main()
 	char	buff[BUFF_SIZE];
 	t_list	*lst = NULL;
 	char	*str;
-	int	i=0;
+
+	t_list	*locallst;
+	int		localpos = 0;
 
 	fd = open("42", 'r');
 	if (fd == -1)
 		return (1);
 	while (ret = read(fd, buff, BUFF_SIZE))
-		ft_lstpushback(&lst, ft_lstnew(buff, ret));
+		ft_lstpushback(&lst, ft_lstnew((void *)buff, ret));
 
-	printline(lst, 0);
-
-	//while (lst)
-	//{
-		//ft_putnbr(lst->content_size);
-		//printf("\np = %p -> %p",lst, lst->next);
-	//	print(lst->content,lst->content_size);
-	//	lst = lst->next;
-	//}
+	locallst = lst;
+	while (locallst)
+	{
+		str = (char *)malloc(sizeof(char) * (len(locallst, localpos) + 1));
+		readline(&locallst, &localpos, str);
+		printf("<%s>\n", str);
+	}
 }
