@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/14 20:22:42 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/15 00:31:59 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int		len(t_list *lst, int local)
 }
 
 
-int		readline(t_list **lst, int *pos, char	*str)
+int		readline(t_list **lst, int *pos, char *str, int *fini)
 {
 	int		local = *pos;
 	char	*localcontent;
@@ -63,7 +63,7 @@ int		readline(t_list **lst, int *pos, char	*str)
 
 	localcontent = (char *)(*lst)->content + local;
 	
-	while (*localcontent != '\n' && *localcontent != EOF)
+	while (*localcontent != '\n')
 	{
 		*str++ = *localcontent++;
 		if (++local == (*lst)->content_size)
@@ -74,11 +74,11 @@ int		readline(t_list **lst, int *pos, char	*str)
 		}
 	}
 	*str = 0;
-	if (*localcontent == EOF)
-		return (0);
 	if (++local == (*lst)->content_size)
 	{
-		*lst = (*lst)->next;
+		*lst = (*lst)->next;	
+		if (!(*lst))
+			*fini = 1;
 		local = 0;
 	}
 	*pos = local;
@@ -87,18 +87,21 @@ int		readline(t_list **lst, int *pos, char	*str)
 
 int		get_next_line(const int fd, char **line)
 {
-	static t_list	*lst = NULL;
+	static t_list		*lst = NULL;
 	static int		pos = 0;
-	int				ret;
-	char	buff[BUFF_SIZE];
+	static int		fini = 0;
+	int			ret;
+	char			buff[BUFF_SIZE];
 
 	if (!lst)
 		while (ret = read(fd, buff, BUFF_SIZE))
 			ft_lstpushback(&lst, ft_lstnew((void *)buff, ret));
+	if (fini)
+		return (0);
 	*line = (char *)malloc(sizeof(char) * (len(lst, pos) + 1));
 	if (!line)
 		return (-1);
-	return (readline(&lst, &pos, *line));
+	return (readline(&lst, &pos, *line, &fini));
 }
 
 int		main()
@@ -109,7 +112,10 @@ int		main()
 	while (get_next_line(fd, &str))
 	{
 		printf("<%s>\n", str);
+		free(str);
+		str = NULL;
 	}
+	//printf("<%s>\n", str);
 }
 
 void	print(void	*s, int		size)
