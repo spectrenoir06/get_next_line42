@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/14 17:33:37 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/14 17:48:57 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,23 +78,11 @@ void	printline(t_list *lst, int posstart)
 	printf("\npos = %d , newpos = %d\n", local, posstart+1);
 }
 
-int		len(t_list *lst, int posstart)
+int		len(t_list *lst, int local)
 {
-	int		local = 0;
-	int		pos = posstart;
 	char	*localcontent;
 	int ret = 0;
 
-	while (pos--)
-	{
-		if (local++ > lst->content_size)
-		{
-			lst = lst->next;
-			if (!lst)
-				return (-1);
-			local = 0;
-		}
-	}
 	localcontent = (char *)lst->content + local;
 	
 	while (*localcontent != '\n')
