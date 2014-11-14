@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/14 19:56:48 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/14 20:22:42 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int		len(t_list *lst, int local)
 }
 
 
-void		readline(t_list **lst, int *pos, char	*str)
+int		readline(t_list **lst, int *pos, char	*str)
 {
 	int		local = *pos;
 	char	*localcontent;
@@ -63,7 +63,7 @@ void		readline(t_list **lst, int *pos, char	*str)
 
 	localcontent = (char *)(*lst)->content + local;
 	
-	while (*localcontent != '\n')
+	while (*localcontent != '\n' && *localcontent != EOF)
 	{
 		*str++ = *localcontent++;
 		if (++local == (*lst)->content_size)
@@ -73,13 +73,16 @@ void		readline(t_list **lst, int *pos, char	*str)
 			local = 0;
 		}
 	}
+	*str = 0;
+	if (*localcontent == EOF)
+		return (0);
 	if (++local == (*lst)->content_size)
 	{
 		*lst = (*lst)->next;
 		local = 0;
 	}
-	*str = 0;
 	*pos = local;
+	return (1);
 }
 
 int		get_next_line(const int fd, char **line)
@@ -95,8 +98,7 @@ int		get_next_line(const int fd, char **line)
 	*line = (char *)malloc(sizeof(char) * (len(lst, pos) + 1));
 	if (!line)
 		return (-1);
-	readline(&lst, &pos, *line);
-	return (1);
+	return (readline(&lst, &pos, *line));
 }
 
 int		main()
@@ -108,7 +110,6 @@ int		main()
 	{
 		printf("<%s>\n", str);
 	}
-
 }
 
 void	print(void	*s, int		size)
