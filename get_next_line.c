@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/15 18:31:13 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/15 19:20:53 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,18 @@ void	ft_lstsmartpushback(t_list **start, t_list *new)
 	static t_list	*memstart = NULL;
 	static t_list	*memend = NULL;
 
-	if (*start == memstart)
+	if (memstart && *start == memstart)
+	{
+		printf("new");
 		memend->next = new;
+	}
 	else
+	{
+		printf("%p, %p\n",*start,new);
+		memstart = *start;
+		memend = new;
 		ft_lstpushback(start, new);
+	}
 }
 
 		int		len(t_list *lst, unsigned int local)
@@ -104,7 +112,7 @@ int		get_next_line(const int fd, char **line)
 	if (!lst && !fini)
 		while ((ret = read(fd, buff, BUFF_SIZE)))
 		{
-			ft_lstpushback(&lst, ft_lstnew((void *)buff, ret));
+			ft_lstsmartpushback(&lst, ft_lstnew((void *)buff, ret));
 			fini = 1;
 		}
 	else if (!lst && fini)
@@ -120,7 +128,7 @@ int		main(void)
 	int		fd;
 	char	*str;
 
-	fd = open("42", 'r');
+	fd = open("42.txt", 'r');
 	while (get_next_line(fd, &str))
 	{
 		printf("<%s>\n", str);
