@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/15 10:13:51 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/15 18:31:13 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 
 #include "libft/libft.h"
 
-#define BUFF_SIZE 5
+#define BUFF_SIZE 1
 
-void ft_lstpushback(t_list **start, t_list *new)
+void	ft_lstpushback(t_list **start, t_list *new)
 {
 	t_list		*lst;
 
@@ -33,11 +33,23 @@ void ft_lstpushback(t_list **start, t_list *new)
 	}
 }
 
-int		len(t_list *lst, unsigned int local)
+void	ft_lstsmartpushback(t_list **start, t_list *new)
+{
+	static t_list	*memstart = NULL;
+	static t_list	*memend = NULL;
+
+	if (*start == memstart)
+		memend->next = new;
+	else
+		ft_lstpushback(start, new);
+}
+
+		int		len(t_list *lst, unsigned int local)
 {
 	char	*localcontent;
-	int ret = 0;
+	int		ret;
 
+	ret = 0;
 	localcontent = (char *)lst->content + local;
 	while (*localcontent != '\n')
 	{
@@ -53,14 +65,13 @@ int		len(t_list *lst, unsigned int local)
 	return (ret);
 }
 
-
-int		readline(t_list **lst, unsigned int *pos, char *str, int *fini)
+int		readline(t_list **lst, unsigned int *pos, char *str)
 {
-	unsigned int	local = *pos;
+	unsigned int	local;
 	char			*localcontent;
 
+	local = *pos;
 	localcontent = (char *)(*lst)->content + local;
-	
 	while (*localcontent != '\n')
 	{
 		*str++ = *localcontent++;
@@ -76,8 +87,6 @@ int		readline(t_list **lst, unsigned int *pos, char *str, int *fini)
 	if (local == (*lst)->content_size)
 	{
 		*lst = (*lst)->next;
-		if (!(*lst))
-			*fini = 1;
 		local = 0;
 	}
 	*pos = local;
@@ -88,38 +97,35 @@ int		get_next_line(const int fd, char **line)
 {
 	static t_list		*lst = NULL;
 	static unsigned int	pos = 0;
-	static int		fini = 0;
-	int				ret;
-	char			buff[BUFF_SIZE];
+	static int			fini = 0;
+	int					ret;
+	char				buff[BUFF_SIZE];
 
-	if (!lst)
+	if (!lst && !fini)
 		while ((ret = read(fd, buff, BUFF_SIZE)))
+		{
 			ft_lstpushback(&lst, ft_lstnew((void *)buff, ret));
-	if (fini)
+			fini = 1;
+		}
+	else if (!lst && fini)
 		return (0);
 	*line = (char *)malloc(sizeof(char) * (len(lst, pos) + 1));
 	if (!line)
 		return (-1);
-	return (readline(&lst, &pos, *line, &fini));
+	return (readline(&lst, &pos, *line));
 }
 
-int		main()
+int		main(void)
 {
-	int		fd = open("42", 'r');
+	int		fd;
 	char	*str;
 
+	fd = open("42", 'r');
 	while (get_next_line(fd, &str))
 	{
 		printf("<%s>\n", str);
 		free(str);
 		str = NULL;
 	}
-	//printf("<%s>\n", str);
 	return (0);
-}
-
-void	print(void	*s, int		size)
-{
-	write(1,s,size);
-	write(1,"\n",1);
 }
