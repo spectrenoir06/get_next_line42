@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/15 20:03:51 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/15 20:32:02 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 #include "libft/libft.h"
 
-#define BUFF_SIZE 5000
+#define BUFF_SIZE 10
 
 void	ft_lstpushback(t_list **start, t_list *new)
 {
