@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/15 19:20:53 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/15 20:03:51 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 #include "libft/libft.h"
 
-#define BUFF_SIZE 1
+#define BUFF_SIZE 5000
 
 void	ft_lstpushback(t_list **start, t_list *new)
 {
@@ -40,15 +40,14 @@ void	ft_lstsmartpushback(t_list **start, t_list *new)
 
 	if (memstart && *start == memstart)
 	{
-		printf("new");
 		memend->next = new;
+		memend = new;
 	}
 	else
 	{
-		printf("%p, %p\n",*start,new);
+		ft_lstpushback(start, new);
 		memstart = *start;
 		memend = new;
-		ft_lstpushback(start, new);
 	}
 }
 
@@ -128,10 +127,10 @@ int		main(void)
 	int		fd;
 	char	*str;
 
-	fd = open("42.txt", 'r');
+	fd = open("27.txt", 'r');
 	while (get_next_line(fd, &str))
 	{
-		printf("<%s>\n", str);
+		//printf("<%s>\n", str);
 		free(str);
 		str = NULL;
 	}
