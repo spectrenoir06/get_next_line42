@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/15 00:31:59 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/15 10:13:51 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void ft_lstpushback(t_list **start, t_list *new)
 	}
 }
 
-int		len(t_list *lst, int local)
+int		len(t_list *lst, unsigned int local)
 {
 	char	*localcontent;
 	int ret = 0;
@@ -54,12 +54,10 @@ int		len(t_list *lst, int local)
 }
 
 
-int		readline(t_list **lst, int *pos, char *str, int *fini)
+int		readline(t_list **lst, unsigned int *pos, char *str, int *fini)
 {
-	int		local = *pos;
-	char	*localcontent;
-	char	*ret = str;
-
+	unsigned int	local = *pos;
+	char			*localcontent;
 
 	localcontent = (char *)(*lst)->content + local;
 	
@@ -74,9 +72,10 @@ int		readline(t_list **lst, int *pos, char *str, int *fini)
 		}
 	}
 	*str = 0;
-	if (++local == (*lst)->content_size)
+	local++;
+	if (local == (*lst)->content_size)
 	{
-		*lst = (*lst)->next;	
+		*lst = (*lst)->next;
 		if (!(*lst))
 			*fini = 1;
 		local = 0;
@@ -88,13 +87,13 @@ int		readline(t_list **lst, int *pos, char *str, int *fini)
 int		get_next_line(const int fd, char **line)
 {
 	static t_list		*lst = NULL;
-	static int		pos = 0;
+	static unsigned int	pos = 0;
 	static int		fini = 0;
-	int			ret;
+	int				ret;
 	char			buff[BUFF_SIZE];
 
 	if (!lst)
-		while (ret = read(fd, buff, BUFF_SIZE))
+		while ((ret = read(fd, buff, BUFF_SIZE)))
 			ft_lstpushback(&lst, ft_lstnew((void *)buff, ret));
 	if (fini)
 		return (0);
@@ -116,6 +115,7 @@ int		main()
 		str = NULL;
 	}
 	//printf("<%s>\n", str);
+	return (0);
 }
 
 void	print(void	*s, int		size)
