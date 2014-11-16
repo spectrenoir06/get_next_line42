@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/16 16:38:40 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/16 17:17:46 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ int		readline(t_list **lst, unsigned int *pos, char *str)
 		if (++local == (*lst)->content_size)
 		{
 			*lst = (*lst)->next;
-			if (!lst)
+			if (!(*lst))
 				return (1);
-			localcontent = (char *)(*lst)->content;
+			localcontent = (char *)((*lst)->content);
 			local = 0;
 		}
 	}
@@ -84,7 +84,7 @@ int		get_next_line(const int fd, char **line)
 		}
 	else if (!lst && fini)
 	{
-		//ft_lstsimpledel(&lst);
+		ft_lstsimpledel(&lst);
 		return (0);
 	}
 	*line = (char *)malloc(sizeof(char) * (len(lst, pos) + 1));
