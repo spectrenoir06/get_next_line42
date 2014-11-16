@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/16 12:59:42 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/16 16:38:40 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,10 @@ int		get_next_line(const int fd, char **line)
 			fini = 1;
 		}
 	else if (!lst && fini)
+	{
+		//ft_lstsimpledel(&lst);
 		return (0);
+	}
 	*line = (char *)malloc(sizeof(char) * (len(lst, pos) + 1));
 	if (!line)
 		return (-1);
