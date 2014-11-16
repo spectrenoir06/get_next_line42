@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/16 12:05:36 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/16 12:18:13 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/16 12:48:02 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,6 @@
 
 # define BUFF_SIZE 10
 
-int		get_next_line(int fd, **line);
+int		get_next_line(int fd,char **line);
 
 #endif

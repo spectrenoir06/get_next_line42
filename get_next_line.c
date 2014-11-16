@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/16 12:11:09 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/16 12:59:42 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ int		len(t_list *lst, unsigned int local)
 		if (++local == lst->content_size)
 		{
 			lst = lst->next;
+			if (!lst)
+				break;
 			localcontent = (char *)(lst->content);
 			local = 0;
 		}
@@ -49,6 +51,8 @@ int		readline(t_list **lst, unsigned int *pos, char *str)
 		if (++local == (*lst)->content_size)
 		{
 			*lst = (*lst)->next;
+			if (!lst)
+				return (1);
 			localcontent = (char *)(*lst)->content;
 			local = 0;
 		}
