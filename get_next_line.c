@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/17 17:09:39 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/17 17:25:10 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,23 +69,23 @@ int		get_next_line(const int fd, char **line)
 {
 	static t_list		*lst = NULL;
 	static unsigned int	pos = 0;
-	static int			fini = 0;
+	static int			end = 0;
 	int					ret;
 	char				buff[BUFF_SIZE];
 
 	if (!line || !(*line) || BUFF_SIZE <= 0 || !fd)
 		return (-1);
-	if (!lst && !fini)
+	if (!lst && !end)
 	{
+		end = 1;
 		while (ret = read(fd, buff, BUFF_SIZE))
 		{
 			if (ret == 0)
 				return (-1);
 			ft_lstsmartpushback(&lst, ft_lstnew((void *)buff, ret));
 		}
-		fini = 1;
 	}
-	else if (!lst && fini)
+	if (!lst && end)
 	{
 		ft_lstsimpledel(&lst);
 		return (0);
