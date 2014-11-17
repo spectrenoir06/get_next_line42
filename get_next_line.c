@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/16 17:17:46 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/17 17:09:39 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 int		len(t_list *lst, unsigned int local)
 {
 	char	*localcontent;
-	int		ret;
+	unsigned int		ret;
 
 	ret = 0;
 	localcontent = (char *)lst->content + local;
@@ -40,31 +40,28 @@ int		len(t_list *lst, unsigned int local)
 
 int		readline(t_list **lst, unsigned int *pos, char *str)
 {
-	unsigned int	local;
 	char			*localcontent;
 
-	local = *pos;
-	localcontent = (char *)(*lst)->content + local;
+	localcontent = (char *)(*lst)->content + *pos;
 	while (*localcontent != '\n')
 	{
 		*str++ = *localcontent++;
-		if (++local == (*lst)->content_size)
+		if (++(*pos) == (*lst)->content_size)
 		{
 			*lst = (*lst)->next;
 			if (!(*lst))
 				return (1);
 			localcontent = (char *)((*lst)->content);
-			local = 0;
+			*pos = 0;
 		}
 	}
 	*str = 0;
-	local++;
-	if (local == (*lst)->content_size)
+	*pos++;
+	if (++(*pos) == (*lst)->content_size)
 	{
 		*lst = (*lst)->next;
-		local = 0;
+		*pos = 0;
 	}
-	*pos = local;
 	return (1);
 }
 
@@ -76,19 +73,23 @@ int		get_next_line(const int fd, char **line)
 	int					ret;
 	char				buff[BUFF_SIZE];
 
+	if (!line || !(*line) || BUFF_SIZE <= 0 || !fd)
+		return (-1);
 	if (!lst && !fini)
-		while ((ret = read(fd, buff, BUFF_SIZE)))
+	{
+		while (ret = read(fd, buff, BUFF_SIZE))
 		{
+			if (ret == 0)
+				return (-1);
 			ft_lstsmartpushback(&lst, ft_lstnew((void *)buff, ret));
-			fini = 1;
 		}
+		fini = 1;
+	}
 	else if (!lst && fini)
 	{
 		ft_lstsimpledel(&lst);
 		return (0);
 	}
 	*line = (char *)malloc(sizeof(char) * (len(lst, pos) + 1));
-	if (!line)
-		return (-1);
 	return (readline(&lst, &pos, *line));
 }
