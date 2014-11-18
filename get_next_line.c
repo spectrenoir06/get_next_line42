@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/17 17:38:41 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/18 19:06:27 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ int		readline(t_list **lst, unsigned int *pos, char *str)
 		}
 	}
 	*str = 0;
-	*pos++;
-	if (++(*pos) == (*lst)->content_size)
+	(*pos) += 2;
+	if (*pos == (*lst)->content_size)
 	{
 		*lst = (*lst)->next;
 		*pos = 0;
@@ -78,7 +78,7 @@ int		get_next_line(const int fd, char **line)
 	if (!lst && !end)
 	{
 		end = 1;
-		while (ret = read(fd, buff, BUFF_SIZE))
+		while ((ret = read(fd, buff, BUFF_SIZE)))
 		{
 			if (ret == 0)
 				return (-1);
