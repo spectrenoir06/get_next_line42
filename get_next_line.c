@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/18 19:06:27 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/19 16:11:43 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,7 @@ int		readline(t_list **lst, unsigned int *pos, char *str)
 		}
 	}
 	*str = 0;
-	(*pos) += 2;
-	if (*pos == (*lst)->content_size)
+	if (++(*pos) == (*lst)->content_size)
 	{
 		*lst = (*lst)->next;
 		*pos = 0;
