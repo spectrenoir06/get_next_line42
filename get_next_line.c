@@ -6,7 +6,7 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/19 16:11:43 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/27 18:52:46 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int		get_next_line(const int fd, char **line)
 	int					ret;
 	char				buff[BUFF_SIZE];
 
-	if (!line|| BUFF_SIZE <= 0 || fd < 0)
+	if (!line || BUFF_SIZE <= 0 || fd < 0)
 		return (-1);
 	if (!lst && !end)
 	{
@@ -82,7 +82,7 @@ int		get_next_line(const int fd, char **line)
 		while ((ret = read(fd, buff, BUFF_SIZE)))
 		{
 			if (ret == -1)
-					return (-1);
+				return (-1);
 			ft_lstsmartpushback(&lst, ft_lstnew((void *)buff, ret));
 		}
 	}
