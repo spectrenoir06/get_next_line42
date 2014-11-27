@@ -49,6 +49,8 @@ int		readline(t_list **lst, unsigned int *pos, char *str)
 		if (++(*pos) == (*lst)->content_size)
 		{
 			*lst = (*lst)->next;
+			if ((*localcontent != '\n' && !(*lst)))
+				return (0);
 			if (!(*lst))
 				return (1);
 			localcontent = (char *)((*lst)->content);
@@ -72,15 +74,15 @@ int		get_next_line(const int fd, char **line)
 	int					ret;
 	char				buff[BUFF_SIZE];
 
-	if (!line || !(*line) || BUFF_SIZE <= 0 || !fd)
+	if (!line|| BUFF_SIZE <= 0 || fd < 0)
 		return (-1);
 	if (!lst && !end)
 	{
 		end = 1;
 		while ((ret = read(fd, buff, BUFF_SIZE)))
 		{
-			if (ret == 0)
-				return (-1);
+			if (ret == -1)
+					return (-1);
 			ft_lstsmartpushback(&lst, ft_lstnew((void *)buff, ret));
 		}
 	}
