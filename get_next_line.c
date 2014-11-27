@@ -6,13 +6,10 @@
 /*   By: adoussau <antoine@doussaud.org>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 14:13:14 by adoussau          #+#    #+#             */
-/*   Updated: 2014/11/27 18:52:46 by adoussau         ###   ########.fr       */
+/*   Updated: 2014/11/27 19:21:17 by adoussau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <fcntl.h>
-#include "libft/libft.h"
 #include "get_next_line.h"
 
 int		len(t_list *lst, unsigned int local)
